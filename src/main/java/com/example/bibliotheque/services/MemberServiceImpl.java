@@ -3,6 +3,7 @@ package com.example.bibliotheque.services;
 import com.example.bibliotheque.models.Member;
 import com.example.bibliotheque.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -20,12 +21,18 @@ public class MemberServiceImpl implements MemberService {
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     /**
      * {@inheritDoc}
      * Sauvegarde un nouveau membre dans la base de données.
      */
     @Override
     public Member createMember(Member member) {
+        if (member.getPassword() != null) {
+            member.setPassword(passwordEncoder.encode(member.getPassword()));
+        }
         return memberRepository.save(member);
     }
 

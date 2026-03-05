@@ -1,5 +1,6 @@
 package com.example.bibliotheque.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -79,6 +80,7 @@ public class User {
      * Le mot de passe est stocké de manière sécurisée (hashé) en base de données.
      * Ce champ est obligatoire.
      */
+     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(nullable = false)
     private String password;
 

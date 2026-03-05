@@ -3,6 +3,7 @@ package com.example.bibliotheque.services;
 import com.example.bibliotheque.models.User;
 import com.example.bibliotheque.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     /**
      * Crée un nouvel utilisateur.
      *
@@ -26,6 +30,9 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User createUser(User user) {
+        if (user.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         return userRepository.save(user);
     }
 

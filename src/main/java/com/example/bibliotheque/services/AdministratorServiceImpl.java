@@ -3,6 +3,7 @@ package com.example.bibliotheque.services;
 import com.example.bibliotheque.models.Administrator;
 import com.example.bibliotheque.repository.AdministratorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,9 @@ public class AdministratorServiceImpl implements AdministratorService {
     @Autowired
     private AdministratorRepository administratorRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     /**
      * {@inheritDoc}
      *
@@ -30,6 +34,10 @@ public class AdministratorServiceImpl implements AdministratorService {
         if (admin.getEmployeeId() != null &&
                 administratorRepository.findByEmployeeId(admin.getEmployeeId()).isPresent()) {
             throw new RuntimeException("Un administrateur avec le matricule '" + admin.getEmployeeId() + "' existe déjà");
+        }
+
+        if (admin.getPassword() != null) {
+            admin.setPassword(passwordEncoder.encode(admin.getPassword()));
         }
         return administratorRepository.save(admin);
     }
